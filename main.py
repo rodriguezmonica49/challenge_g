@@ -10,7 +10,6 @@ from pydantic import BaseModel
 class DataSerializer(BaseModel):
     filename: str
     nametable: str
-    #columns: List[str]
 
 
 @app.get("/")
@@ -26,11 +25,7 @@ def read_item(item_id: int, q: Union[str, None] = None):
 def load_data(data: DataSerializer):
     df_employees = read_csv(data.filename)
     df_employees = clean_data(df_employees)
-
     df_employees.to_sql(data.nametable, engine, chunksize=419,index=False, method='multi', if_exists='replace')
 
     return {"result": "Data cargada"}
 
-df_employees = read_csv("jobs")
-df_employees = clean_data(df_employees)
-df_employees.to_sql("jobs", engine, chunksize=419,index=False, method='multi', if_exists='replace')
